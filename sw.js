@@ -1,47 +1,47 @@
-const CACHE_NAME = 'vault-cache-v2';
+const CACHE_NAME = 'vault-cache-v3';
 const ASSETS_TO_CACHE = [
-  './password-manager.html',
+  './',
+  './index.html',
   './manifest.json'
 ];
 
 self.addEventListener('install', (event) => {
   event.waitUntil(
-    caches.open(CACHE_NAME).then((cache) => {
-      return cache.addAll(ASSETS_TO_CACHE);
-    }).then(() => self.skipWaiting())
+    caches.open(CACHE_NAME)
+      .then((cache) => cache.addAll(ASSETS_TO_CACHE))
+      .then(() => self.skipWaiting())
   );
 });
 
 self.addEventListener('activate', (event) => {
   event.waitUntil(
-    caches.keys().then((cacheNames) => {
-      return Promise.all(
+    caches.keys().then((cacheNames) =>
+      Promise.all(
         cacheNames.map((cacheName) => {
-          if (cacheName !== CACHE_NAME) {
-            return caches.delete(cacheName);
-          }
+          if (cacheName !== CACHE_NAME) return caches.delete(cacheName);
         })
-      );
-    }).then(() => self.clients.claim())
+      )
+    ).then(() => self.clients.claim())
   );
 });
 
 self.addEventListener('fetch', (event) => {
+  if (event.request.method !== 'GET') return;
+
+  const url = new URL(event.request.url);
+  if (url.origin !== self.location.origin) return;
+
   event.respondWith(
-    caches.match(event.request).then((response) => {
-      return response || fetch(event.request).then(fetchRes => {
-        // Only cache local assets, skip extensions/chrome requests
-        if(event.request.url.startsWith(self.location.origin)) {
-            return caches.open(CACHE_NAME).then(cache => {
-                cache.put(event.request, fetchRes.clone());
-                return fetchRes;
-            });
+    caches.match(event.request).then((cached) => {
+      if (cached) return cached;
+      return fetch(event.request).then((fetchRes) => {
+        if (!fetchRes || fetchRes.status !== 200 || fetchRes.type === 'opaque') {
+          return fetchRes;
         }
+        const clone = fetchRes.clone();
+        caches.open(CACHE_NAME).then((cache) => cache.put(event.request, clone));
         return fetchRes;
       });
-    }).catch(() => {
-        // Fallback for offline if not in cache (though everything is in one file)
-        return caches.match('./password-manager.html');
-    })
+    }).catch(() => caches.match('./index.html'))
   );
 });

@@ -3,13 +3,17 @@
 
 <head>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
     <title>Secure Vault - Password Manager</title>
     <link rel="manifest" href="./manifest.json">
-    <meta name="theme-color" content="#0f172a">
+    <meta name="theme-color" content="#0f1117">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+    <meta http-equiv="Content-Security-Policy"
+        content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self';">
     <style>
         #dashboard-header {
-            display: none !important;
+            display: none;
         }
 
         :root {
@@ -716,7 +720,7 @@
         }
 
         .detail-header {
-            padding: 40px 32px 24px;
+            padding: 24px 32px 24px;
             border-bottom: 1px solid var(--border);
             text-align: center;
             position: relative;
@@ -757,6 +761,51 @@
             font-weight: 600;
         }
 
+        .detail-toolbar {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+            gap: 12px;
+            padding: 12px 16px;
+            border-bottom: 1px solid var(--border);
+            background: var(--bg);
+            flex-shrink: 0;
+            min-height: 56px;
+        }
+
+        .detail-back-btn {
+            display: inline-flex;
+            align-items: center;
+            gap: 6px;
+            padding: 8px 12px;
+            min-height: 40px;
+            border-radius: var(--radius-sm);
+            color: var(--text-secondary);
+            background: transparent;
+            border: 1px solid transparent;
+            font-size: 14px;
+            font-weight: 600;
+            transition: var(--transition);
+        }
+
+        .detail-back-btn:hover,
+        .detail-back-btn:focus-visible {
+            color: var(--text-primary);
+            background: var(--surface-hover);
+            border-color: var(--border);
+            outline: none;
+        }
+
+        .detail-back-btn .icon {
+            width: 20px;
+            height: 20px;
+            stroke: currentColor;
+            fill: none;
+            stroke-width: 2;
+            stroke-linecap: round;
+            stroke-linejoin: round;
+        }
+
         .panel-close {
             position: absolute;
             top: 20px;
@@ -769,6 +818,11 @@
             display: flex;
             align-items: center;
             justify-content: center;
+            flex-shrink: 0;
+        }
+
+        .side-panel .detail-toolbar .panel-close {
+            position: static;
         }
 
         .detail-body {
@@ -1196,6 +1250,16 @@
                 border-left: none;
             }
 
+            .detail-toolbar {
+                padding: 10px 12px;
+                padding-top: max(10px, env(safe-area-inset-top));
+            }
+
+            .detail-back-btn {
+                min-height: 44px;
+                padding: 10px 14px;
+            }
+
             .modal-content {
                 max-height: 100dvh;
                 height: 100%;
@@ -1238,40 +1302,38 @@
         }
 
 
-       .footer-credit{
-    position: fixed;
-    bottom: 18px;
-    left: 50%;
-    transform: translateX(-50%);
+        .footer-credit {
+            position: fixed;
+            bottom: 18px;
+            left: 50%;
+            transform: translateX(-50%);
 
-    padding: 4px 10px;
-    border-radius: 8px;
+            padding: 4px 10px;
+            border-radius: 8px;
 
-    background: rgba(255,255,255,.04);
-    backdrop-filter: blur(8px);
+            background: rgba(255, 255, 255, .04);
+            backdrop-filter: blur(8px);
 
-    color: #8ea2d8;
-    font-size: 13px;
-    font-weight: 500;
+            color: #8ea2d8;
+            font-size: 13px;
+            font-weight: 500;
 
-    white-space: nowrap;
-}
+            white-space: nowrap;
+        }
+
+
+
+
+
+
+
+
+
+
+
+
+
     </style>
-
-    <!-- Google tag (gtag.js) -->
-    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S3655H8JHJ"></script>
-    <script>
-        window.dataLayer = window.dataLayer || [];
-        function gtag() { dataLayer.push(arguments); }
-        gtag('js', new Date());
-
-        gtag('config', 'G-S3655H8JHJ');
-    </script>
-
-
-
-
-
 
 
 
@@ -1519,15 +1581,28 @@
         <!-- 4. Detail Panel -->
         <div class="panel-overlay" id="panel-overlay"></div>
         <div class="side-panel" id="detail-panel">
-            <button class="icon-btn panel-close" id="btn-close-detail"><svg class="icon" viewBox="0 0 24 24">
-                    <line x1="18" y1="6" x2="6" y2="18"></line>
-                    <line x1="6" y1="6" x2="18" y2="18"></line>
-                </svg></button>
+            <div class="detail-toolbar">
+                <button type="button" class="detail-back-btn" id="btn-detail-back" aria-label="Back to entries">
+                    <svg class="icon" viewBox="0 0 24 24" aria-hidden="true">
+                        <polyline points="15 18 9 12 15 6"></polyline>
+                    </svg>
+                    <span>Back</span>
+                </button>
+                <button type="button" class="icon-btn panel-close" id="btn-close-detail" aria-label="Close details">
+                    <svg class="icon" viewBox="0 0 24 24">
+                        <line x1="18" y1="6" x2="6" y2="18"></line>
+                        <line x1="6" y1="6" x2="18" y2="18"></line>
+                    </svg>
+                </button>
+            </div>
+
             <div class="detail-header">
                 <div class="detail-icon-large" id="detail-icon"></div>
                 <div class="detail-title" id="detail-title">Title</div>
                 <div class="detail-category" id="detail-category-badge"></div>
             </div>
+
+
             <div class="detail-body" id="detail-body">
                 <!-- Fields populated by JS -->
             </div>
@@ -1877,7 +1952,19 @@
         let deferredPrompt;
         if ('serviceWorker' in navigator) {
             window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js').catch(err => console.log('SW registration failed:', err));
+                navigator.serviceWorker.register('./sw.js')
+                    .then((reg) => {
+                        reg.addEventListener('updatefound', () => {
+                            const worker = reg.installing;
+                            if (!worker) return;
+                            worker.addEventListener('statechange', () => {
+                                if (worker.state === 'installed' && navigator.serviceWorker.controller) {
+                                    showToast('Update available. Refresh to apply.', 'warning');
+                                }
+                            });
+                        });
+                    })
+                    .catch(() => { /* offline or unsupported */ });
             });
         }
         window.addEventListener('beforeinstallprompt', (e) => {
@@ -1976,9 +2063,19 @@
             unlockVaultSuccess();
         }
 
+        function parseStoredVault() {
+            const raw = localStorage.getItem('vault_data');
+            if (!raw) throw new Error('No vault');
+            const stored = JSON.parse(raw);
+            if (!stored || typeof stored !== 'object' || !stored.salt || !stored.iv || !stored.ciphertext) {
+                throw new Error('Invalid vault structure');
+            }
+            return stored;
+        }
+
         async function unlockVault(password) {
             try {
-                const stored = JSON.parse(localStorage.getItem('vault_data'));
+                const stored = parseStoredVault();
                 const salt = CryptoUtils.b642buf(stored.salt);
                 const iv = CryptoUtils.b642buf(stored.iv);
                 const ciphertext = CryptoUtils.b642buf(stored.ciphertext);
@@ -1987,7 +2084,13 @@
                 const decrypted = await CryptoUtils.decrypt(ciphertext, iv, key);
 
                 State.key = key; State.salt = salt;
-                State.vault = JSON.parse(decrypted);
+                State.vault = JSON.parse(decrypted, (key, value) => {
+                    if (key === '__proto__' || key === 'constructor') return undefined;
+                    return value;
+                });
+                if (!State.vault || !Array.isArray(State.vault.entries)) {
+                    throw new Error('Invalid vault payload');
+                }
                 if (!State.vault.settings) State.vault.settings = DEFAULT_SETTINGS;
 
                 // Migrations & Cleanup
@@ -2016,23 +2119,57 @@
             updateDashboard();
         }
 
+        const VAULT_VIEW = { vault: 'vault', detail: 'detail' };
+
+        function initVaultHistory() {
+            history.replaceState({ view: VAULT_VIEW.vault }, '');
+        }
+
         function unlockVaultSuccess() {
             applyTheme(State.vault.settings.theme);
             renderSidebar();
             updateDashboard();
             renderEntries();
             showView('view-main');
+            initVaultHistory();
             resetAutoLock();
             document.getElementById('lock-pwd').value = '';
         }
 
-        function lockVault() {
+        let vaultSaveTimer = null;
+
+        function scheduleVaultSave() {
+            if (!State.key || !State.vault) return;
+            clearTimeout(vaultSaveTimer);
+            vaultSaveTimer = setTimeout(() => { vaultSaveTimer = null; saveVault(); }, 500);
+        }
+
+        async function flushVaultSave() {
+            if (vaultSaveTimer) {
+                clearTimeout(vaultSaveTimer);
+                vaultSaveTimer = null;
+                await saveVault();
+            }
+        }
+
+        async function lockVault() {
             if (!State.vault) return;
+            await flushVaultSave();
+            clearTimeout(vaultSaveTimer);
+            vaultSaveTimer = null;
+            State.genHistory = [];
             State.key = null; State.vault = null; State.salt = null;
             clearTimeout(State.autoLockTimer);
+            clearTimeout(State.clipboardTimer);
+            ['lock-pwd', 'setup-pwd', 'setup-pwd-confirm', 'entry-password'].forEach((id) => {
+                const input = document.getElementById(id);
+                if (input) input.value = '';
+            });
             showView('view-lock');
             document.querySelectorAll('.modal-overlay, .panel-overlay, .sidebar-overlay').forEach(el => el.classList.remove('active'));
+            document.getElementById('panel-overlay').classList.remove('active');
             document.getElementById('detail-panel').classList.remove('active');
+            history.replaceState(null, '');
             document.getElementById('sidebar').classList.remove('open');
             document.getElementById('search-input').value = '';
             State.searchQuery = '';
@@ -2222,11 +2359,14 @@
 
         // --- Details Panel ---
         async function openDetailPanel(entry) {
-            if (!entry.isDeleted) { entry.lastAccess = Date.now(); await saveVault(); }
+            if (!entry.isDeleted) {
+                entry.lastAccess = Date.now();
+                scheduleVaultSave();
+            }
 
-            document.getElementById('detail-icon').innerHTML = ICONS[entry.category] || ICONS.Other;
-            document.getElementById('detail-title').textContent = entry.title;
-            document.getElementById('detail-category-badge').innerHTML = `${ICONS[entry.category] || ''} ${entry.category}`;
+            document.getElementById('detail-icon').innerHTML = ICONS[CATEGORIES.includes(entry.category) ? entry.category : 'Other'] || ICONS.Other;
+            document.getElementById('detail-title').textContent = entry.title || '';
+            setCategoryBadge(document.getElementById('detail-category-badge'), entry.category);
 
             const body = document.getElementById('detail-body');
             body.innerHTML = '';
@@ -2235,13 +2375,19 @@
                 if (!value) return;
                 const wrapper = el('div', 'detail-field');
                 const lbl = el('label');
-                lbl.textContent = label;
 
                 if (isUrl) {
-                    const a = el('a', '', 'Open Link');
-                    a.href = value.startsWith('http') ? value : 'https://' + value;
-                    a.target = '_blank';
-                    lbl.innerHTML = ''; lbl.appendChild(document.createTextNode(label + ' ')); lbl.appendChild(a);
+                    lbl.appendChild(document.createTextNode(label + ' '));
+                    const href = safeExternalUrl(value);
+                    if (href) {
+                        const a = el('a', '', 'Open Link');
+                        a.href = href;
+                        a.target = '_blank';
+                        a.rel = 'noopener noreferrer';
+                        lbl.appendChild(a);
+                    }
+                } else {
+                    lbl.textContent = label;
                 }
                 wrapper.appendChild(lbl);
 
@@ -2272,9 +2418,21 @@
 
             if (entry.notes) {
                 const n = el('div', 'detail-field');
-                n.innerHTML = `<label>Notes <button class="icon-btn" style="padding:4px; height:auto" id="btn-copy-notes">${ICONS.Copy}</button></label><div class="detail-value-group"><div class="detail-value" style="white-space:pre-wrap;"></div></div>`;
-                n.querySelector('.detail-value').textContent = entry.notes;
-                n.querySelector('#btn-copy-notes').onclick = (e) => copyToClipboard(entry.notes, e.currentTarget);
+                const notesLbl = el('label');
+                notesLbl.appendChild(document.createTextNode('Notes '));
+                const copyNotesBtn = el('button', 'icon-btn', ICONS.Copy);
+                copyNotesBtn.style.padding = '4px';
+                copyNotesBtn.style.height = 'auto';
+                copyNotesBtn.title = 'Copy notes';
+                copyNotesBtn.onclick = (e) => copyToClipboard(entry.notes, e.currentTarget);
+                notesLbl.appendChild(copyNotesBtn);
+                const notesGrp = el('div', 'detail-value-group');
+                const notesVal = el('div', 'detail-value');
+                notesVal.style.whiteSpace = 'pre-wrap';
+                notesVal.textContent = entry.notes;
+                notesGrp.appendChild(notesVal);
+                n.appendChild(notesLbl);
+                n.appendChild(notesGrp);
                 body.appendChild(n);
             }
 
@@ -2289,11 +2447,18 @@
             }
 
             const meta = el('div', 'detail-meta');
-            meta.innerHTML = `
-                <div><strong>Created:</strong> ${new Date(entry.createdAt).toLocaleString()}</div>
-                <div><strong>Modified:</strong> ${new Date(entry.updatedAt).toLocaleString()}</div>
-                <div><strong>Last Access:</strong> ${entry.lastAccess ? new Date(entry.lastAccess).toLocaleString() : 'Never'}</div>
-            `;
+            [
+                ['Created', entry.createdAt],
+                ['Modified', entry.updatedAt],
+                ['Last Access', entry.lastAccess]
+            ].forEach(([label, ts]) => {
+                const row = el('div');
+                const strong = document.createElement('strong');
+                strong.textContent = `${label}: `;
+                row.appendChild(strong);
+                row.appendChild(document.createTextNode(ts ? new Date(ts).toLocaleString() : 'Never'));
+                meta.appendChild(row);
+            });
             body.appendChild(meta);
 
             // Footer
@@ -2308,8 +2473,9 @@
                         await saveVault(); closeDetailPanel(); renderEntries(); showToast('Permanently deleted');
                     } else if (name !== null) showToast('Name mismatch. Cancelled.', 'warning');
                 };
-                const res = el('button', 'btn btn-primary', 'Restore');
-                res.innerHTML = ICONS.Restore + ' Restore';
+                const res = el('button', 'btn btn-primary');
+                res.appendChild(el('span', '', ICONS.Restore));
+                res.appendChild(document.createTextNode(' Restore'));
                 res.onclick = async () => {
                     entry.isDeleted = false; entry.deletedAt = undefined; entry.updatedAt = Date.now();
                     await saveVault(); closeDetailPanel(); renderEntries(); showToast('Entry restored', 'success');
@@ -2327,14 +2493,25 @@
                 footer.appendChild(del); footer.appendChild(spacer); footer.appendChild(edit);
             }
 
+            const panel = document.getElementById('detail-panel');
+            const wasOpen = panel.classList.contains('active');
             document.getElementById('panel-overlay').classList.add('active');
-            document.getElementById('detail-panel').classList.add('active');
+            panel.classList.add('active');
+            if (!wasOpen) {
+                history.pushState({ view: VAULT_VIEW.detail }, '');
+            }
         }
 
-        function closeDetailPanel() {
+        async function closeDetailPanel(skipHistory = false) {
+            const panel = document.getElementById('detail-panel');
+            const wasOpen = panel.classList.contains('active');
             document.getElementById('panel-overlay').classList.remove('active');
-            document.getElementById('detail-panel').classList.remove('active');
+            panel.classList.remove('active');
+            await flushVaultSave();
             renderEntries();
+            if (!skipHistory && wasOpen && history.state?.view === VAULT_VIEW.detail) {
+                history.back();
+            }
         }
 
         // --- Add / Edit Entry Modal ---
@@ -2358,10 +2535,11 @@
             const id = document.getElementById('entry-id').value;
             const tagsInput = document.getElementById('entry-tags').value;
 
+            const categoryVal = document.getElementById('entry-category').value;
             const entryData = {
                 id: id || crypto.randomUUID(),
                 title: document.getElementById('entry-title').value.trim(),
-                category: document.getElementById('entry-category').value,
+                category: CATEGORIES.includes(categoryVal) ? categoryVal : 'Other',
                 username: document.getElementById('entry-username').value.trim(),
                 password: document.getElementById('entry-password').value,
                 url: document.getElementById('entry-url').value.trim(),
@@ -2446,7 +2624,7 @@
                 const wordCount = Math.max(3, Math.floor(len / 5)); // Approx
                 const arr = new Uint32Array(wordCount);
                 crypto.getRandomValues(arr);
-                result = Array.from(arr).map(n => WORD_LIST[n % WORD_LIST.length]).join('-');
+                result = Array.from(arr).map(() => WORD_LIST[secureRandomIndex(WORD_LIST.length)]).join('-');
                 entropy = Math.floor(wordCount * Math.log2(WORD_LIST.length));
             } else {
                 const upper = document.getElementById('gen-upper').checked;
@@ -2464,7 +2642,7 @@
 
                 const arr = new Uint32Array(len);
                 crypto.getRandomValues(arr);
-                for (let i = 0; i < len; i++) result += chars[arr[i] % chars.length];
+                for (let i = 0; i < len; i++) result += chars[secureRandomIndex(chars.length)];
                 entropy = Math.floor(len * Math.log2(chars.length || 1));
             }
 
@@ -2630,6 +2808,10 @@
 
         function handleImportFile(file, isSetup = false) {
             if (!file) return;
+            if (file.size > MAX_IMPORT_BYTES) {
+                alert('File is too large. Maximum import size is 5 MB.');
+                return;
+            }
             const reader = new FileReader();
             reader.onload = async (ev) => {
                 try {
@@ -2657,10 +2839,7 @@
                         if (!State.vault && !isSetup) return alert("Please unlock a vault first.");
                         const data = JSON.parse(content);
                         if (Array.isArray(data)) {
-                            const entries = data.map(e => ({
-                                ...e,
-                                id: crypto.randomUUID(), createdAt: Date.now(), updatedAt: Date.now(), isDeleted: false
-                            }));
+                            const entries = data.map((e) => sanitizeImportedEntry(e));
                             if (isSetup) { State.vault = { version: 3, entries, settings: DEFAULT_SETTINGS }; await saveVault(); unlockVaultSuccess(); }
                             else { await processImport(entries); }
                         }
@@ -2671,12 +2850,11 @@
                         const entries = [];
                         for (let i = 1; i < rows.length; i++) {
                             const r = rows[i]; if (!r[0]) continue;
-                            entries.push({
-                                id: crypto.randomUUID(), title: r[0], category: r[1] || 'Other',
+                            entries.push(sanitizeImportedEntry({
+                                title: r[0], category: r[1] || 'Other',
                                 username: r[2] || '', password: r[3] || '', url: r[4] || '', notes: r[5] || '',
-                                tags: r[6] ? r[6].split(';').map(s => s.trim()) : [],
-                                createdAt: Date.now(), updatedAt: Date.now(), isDeleted: false
-                            });
+                                tags: r[6] ? r[6].split(';').map(s => s.trim()) : []
+                            }));
                         }
                         if (isSetup) { State.vault = { version: 3, entries, settings: DEFAULT_SETTINGS }; await saveVault(); unlockVaultSuccess(); }
                         else { await processImport(entries); }
@@ -2699,15 +2877,23 @@
 
         // --- Helpers ---
         function copyToClipboard(text, btnElement) {
-            if (!text) return;
+            if (!text || !navigator.clipboard) {
+                showToast('Clipboard unavailable. Use HTTPS or localhost.', 'error');
+                return;
+            }
             navigator.clipboard.writeText(text).then(() => {
                 const origHtml = btnElement.innerHTML;
                 btnElement.innerHTML = ICONS.Check; btnElement.style.color = 'var(--success)';
                 setTimeout(() => { btnElement.innerHTML = origHtml; btnElement.style.color = ''; }, 1500);
 
                 clearTimeout(State.clipboardTimer);
-                const secs = parseInt(State.vault.settings.clipboardClearSeconds);
-                if (secs > 0) State.clipboardTimer = setTimeout(() => navigator.clipboard.writeText('').catch(e => { }), secs * 1000);
+                if (!State.vault?.settings) return;
+                const secs = parseInt(State.vault.settings.clipboardClearSeconds, 10);
+                if (secs > 0) {
+                    State.clipboardTimer = setTimeout(() => {
+                        navigator.clipboard.writeText('').catch(() => { });
+                    }, secs * 1000);
+                }
             }).catch(() => showToast('Failed to copy', 'error'));
         }
 
@@ -2736,18 +2922,66 @@
             const div = document.createElement('div'); div.textContent = str; return div.innerHTML;
         }
 
-        function debounce(func, wait) {
-            let timeout; return function (...args) { clearTimeout(timeout); timeout = setTimeout(() => func(...args), wait); };
+        function safeExternalUrl(raw) {
+            if (!raw || typeof raw !== 'string') return null;
+            const trimmed = raw.trim();
+            if (!trimmed) return null;
+            try {
+                const url = new URL(trimmed.includes('://') ? trimmed : `https://${trimmed}`);
+                if (url.protocol !== 'http:' && url.protocol !== 'https:') return null;
+                return url.href;
+            } catch {
+                return null;
+            }
         }
 
+        function sanitizeImportedEntry(raw) {
+            const category = CATEGORIES.includes(raw?.category) ? raw.category : 'Other';
+            const tags = Array.isArray(raw?.tags)
+                ? raw.tags.filter((t) => typeof t === 'string').map((t) => t.trim()).filter(Boolean).slice(0, 20)
+                : [];
+            return {
+                id: crypto.randomUUID(),
+                title: (String(raw?.title ?? '').trim().slice(0, 256)) || 'Untitled',
+                category,
+                username: String(raw?.username ?? '').slice(0, 512),
+                password: String(raw?.password ?? '').slice(0, 1024),
+                url: String(raw?.url ?? '').trim().slice(0, 2048),
+                notes: String(raw?.notes ?? '').slice(0, 8192),
+                tags,
+                createdAt: Date.now(),
+                updatedAt: Date.now(),
+                lastAccess: Date.now(),
+                isFavorite: !!raw?.isFavorite,
+                isDeleted: false
+            };
+        }
 
-        function safeAddEvent(id, event, callback) {
-            const el = document.getElementById(id);
-            if (!el) {
-                console.error('Missing element:', id);
-                return;
-            }
-            el.addEventListener(event, callback);
+        function setCategoryBadge(el, category) {
+            const safe = CATEGORIES.includes(category) ? category : 'Other';
+            el.replaceChildren();
+            const iconSpan = document.createElement('span');
+            iconSpan.innerHTML = ICONS[safe] || ICONS.Other;
+            el.appendChild(iconSpan);
+            el.appendChild(document.createTextNode(` ${safe}`));
+        }
+
+        function secureRandomIndex(max) {
+            if (max <= 0) return 0;
+            const limit = Math.floor(0x100000000 / max) * max;
+            const buf = new Uint32Array(1);
+            let n;
+            do {
+                crypto.getRandomValues(buf);
+                n = buf[0];
+            } while (n >= limit);
+            return n % max;
+        }
+
+        const MAX_IMPORT_BYTES = 5 * 1024 * 1024;
+
+        function debounce(func, wait) {
+            let timeout; return function (...args) { clearTimeout(timeout); timeout = setTimeout(() => func(...args), wait); };
         }
 
 
@@ -2781,8 +3015,15 @@
             }
         });
 
-        // Detail panel close
-        document.getElementById('btn-close-detail').addEventListener('click', closeDetailPanel);
+        // Detail panel close / back
+        document.getElementById('btn-close-detail').addEventListener('click', () => closeDetailPanel());
+        document.getElementById('btn-detail-back').addEventListener('click', () => closeDetailPanel());
+
+        window.addEventListener('popstate', () => {
+            if (document.getElementById('detail-panel').classList.contains('active')) {
+                closeDetailPanel(true);
+            }
+        });
 
         // Header / Search / Mobile
         const searchInput = document.getElementById('search-input');
@@ -2826,7 +3067,9 @@
 
         document.querySelectorAll('.modal-overlay, .panel-overlay').forEach(el => {
             el.addEventListener('click', (e) => {
-                if (e.target === el) { el.classList.remove('active'); if (el.id === 'panel-overlay') document.getElementById('detail-panel').classList.remove('active'); }
+                if (e.target !== el) return;
+                if (el.id === 'panel-overlay') closeDetailPanel();
+                else el.classList.remove('active');
             });
         });
 
@@ -2843,6 +3086,32 @@
                 input.dispatchEvent(new Event('input'));
             }
             closeGeneratorModal();
+        });
+
+        document.addEventListener('keydown', (e) => {
+            if (e.key !== 'Escape') return;
+            if (document.getElementById('detail-panel').classList.contains('active')) {
+                closeDetailPanel();
+                return;
+            }
+            const overlays = [
+                'modal-entry-overlay',
+                'modal-gen-overlay',
+                'modal-settings-overlay',
+                'modal-health-overlay'
+            ];
+            for (const id of overlays) {
+                const overlay = document.getElementById(id);
+                if (overlay?.classList.contains('active')) {
+                    overlay.classList.remove('active');
+                    if (id === 'modal-gen-overlay') genTargetInput = null;
+                    return;
+                }
+            }
+            if (document.getElementById('sidebar').classList.contains('open')) {
+                document.getElementById('sidebar').classList.remove('open');
+                document.getElementById('sidebar-overlay').classList.remove('active');
+            }
         });
 
         // Boot
