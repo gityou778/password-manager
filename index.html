@@ -1236,7 +1236,48 @@
                 grid-template-columns: 1fr;
             }
         }
+
+
+       .footer-credit{
+    position: fixed;
+    bottom: 18px;
+    left: 50%;
+    transform: translateX(-50%);
+
+    padding: 4px 10px;
+    border-radius: 8px;
+
+    background: rgba(255,255,255,.04);
+    backdrop-filter: blur(8px);
+
+    color: #8ea2d8;
+    font-size: 13px;
+    font-weight: 500;
+
+    white-space: nowrap;
+}
     </style>
+
+    <!-- Google tag (gtag.js) -->
+    <script async src="https://www.googletagmanager.com/gtag/js?id=G-S3655H8JHJ"></script>
+    <script>
+        window.dataLayer = window.dataLayer || [];
+        function gtag() { dataLayer.push(arguments); }
+        gtag('js', new Date());
+
+        gtag('config', 'G-S3655H8JHJ');
+    </script>
+
+
+
+
+
+
+
+
+
+
+
 </head>
 
 <body>
@@ -1821,6 +1862,11 @@
 
         <div class="toast-container" id="toast-container"></div>
     </div>
+
+
+    <footer class="footer-credit">
+        Made with ❤️ by Mahmoud Elkomy
+    </footer>
 
     <script>
         /**
