@@ -12,10 +12,6 @@
     <meta http-equiv="Content-Security-Policy"
         content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; img-src 'self' data:; connect-src 'self'; object-src 'none'; base-uri 'self'; frame-ancestors 'none'; form-action 'self';">
     <style>
-        #dashboard-header {
-            display: none;
-        }
-
         :root {
             --bg: #0f1117;
             --surface: #1a1d27;
@@ -400,7 +396,7 @@
             transition: opacity 0.3s;
         }
 
-        /* Main Area & Dashboard */
+        /* Main Area */
         .main-content {
             flex: 1;
             display: flex;
@@ -453,65 +449,6 @@
             display: flex;
             gap: 8px;
             align-items: center;
-        }
-
-        .dashboard-header {
-            padding: 24px 24px 12px;
-            display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-            gap: 16px;
-            flex-shrink: 0;
-        }
-
-        .dash-card {
-            background: var(--surface);
-            border: 1px solid var(--border);
-            border-radius: var(--radius);
-            padding: 16px;
-            display: flex;
-            align-items: center;
-            gap: 16px;
-            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.05);
-        }
-
-        .dash-icon {
-            width: 48px;
-            height: 48px;
-            border-radius: 50%;
-            background: var(--surface-hover);
-            display: flex;
-            align-items: center;
-            justify-content: center;
-            color: var(--accent);
-        }
-
-        .dash-info h4 {
-            font-size: 12px;
-            color: var(--text-secondary);
-            text-transform: uppercase;
-            letter-spacing: 0.5px;
-            font-weight: 600;
-            margin-bottom: 4px;
-        }
-
-        .dash-info span {
-            font-size: 24px;
-            font-weight: 800;
-        }
-
-        .dash-card.danger .dash-icon {
-            color: var(--danger);
-            background: rgba(239, 68, 68, 0.1);
-        }
-
-        .dash-card.warning .dash-icon {
-            color: var(--warning);
-            background: rgba(245, 158, 11, 0.1);
-        }
-
-        .dash-card.success .dash-icon {
-            color: var(--success);
-            background: rgba(16, 185, 129, 0.1);
         }
 
         .list-controls {
@@ -1186,12 +1123,6 @@
         }
 
         /* Responsive Breakpoints */
-        @media (max-width: 1024px) {
-            .dashboard-header {
-                grid-template-columns: 1fr 1fr;
-            }
-        }
-
         @media (max-width: 768px) {
             .hamburger {
                 display: flex;
@@ -1219,11 +1150,6 @@
 
             .sidebar-footer {
                 padding-bottom: 24px;
-            }
-
-            .dashboard-header {
-                grid-template-columns: 1fr 1fr;
-                padding: 16px 16px 8px;
             }
 
             .header {
@@ -1292,10 +1218,6 @@
         }
 
         @media (max-width: 425px) {
-            .dashboard-header {
-                grid-template-columns: 1fr;
-            }
-
             .health-grid {
                 grid-template-columns: 1fr;
             }
@@ -1510,51 +1432,6 @@
                                 <line x1="5" y1="12" x2="19" y2="12"></line>
                             </svg> Add
                         </button>
-                    </div>
-                </div>
-
-                <div class="dashboard-header" id="dashboard-header">
-                    <div class="dash-card">
-                        <div class="dash-icon"><svg class="icon" viewBox="0 0 24 24">
-                                <rect x="3" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="3" width="7" height="7"></rect>
-                                <rect x="14" y="14" width="7" height="7"></rect>
-                                <rect x="3" y="14" width="7" height="7"></rect>
-                            </svg></div>
-                        <div class="dash-info">
-                            <h4>Total Entries</h4><span id="dash-total">0</span>
-                        </div>
-                    </div>
-                    <div class="dash-card">
-                        <div class="dash-icon" style="color: #eab308; background: rgba(234, 179, 8, 0.1);"><svg
-                                class="icon" viewBox="0 0 24 24" fill="currentColor">
-                                <polygon
-                                    points="12 2 15.09 8.26 22 9.27 17 14.14 18.18 21.02 12 17.77 5.82 21.02 7 14.14 2 9.27 8.91 8.26 12 2">
-                                </polygon>
-                            </svg></div>
-                        <div class="dash-info">
-                            <h4>Favorites</h4><span id="dash-favs">0</span>
-                        </div>
-                    </div>
-                    <div class="dash-card danger" id="dash-card-weak">
-                        <div class="dash-icon"><svg class="icon" viewBox="0 0 24 24">
-                                <path
-                                    d="M10.29 3.86L1.82 18a2 2 0 0 0 1.71 3h16.94a2 2 0 0 0 1.71-3L13.71 3.86a2 2 0 0 0-3.42 0z">
-                                </path>
-                                <line x1="12" y1="9" x2="12" y2="13"></line>
-                                <line x1="12" y1="17" x2="12.01" y2="17"></line>
-                            </svg></div>
-                        <div class="dash-info">
-                            <h4>Weak Passwords</h4><span id="dash-weak">0</span>
-                        </div>
-                    </div>
-                    <div class="dash-card success" id="dash-card-score">
-                        <div class="dash-icon"><svg class="icon" viewBox="0 0 24 24">
-                                <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
-                            </svg></div>
-                        <div class="dash-info">
-                            <h4>Security Score</h4><span id="dash-score">100</span>
-                        </div>
                     </div>
                 </div>
 
@@ -2116,7 +1993,6 @@
             const { iv, ciphertext } = await CryptoUtils.encrypt(data, State.key);
             localStorage.setItem('vault_data', JSON.stringify({ salt: CryptoUtils.buf2b64(State.salt), iv: CryptoUtils.buf2b64(iv), ciphertext: CryptoUtils.buf2b64(ciphertext) }));
             renderSidebar();
-            updateDashboard();
         }
 
         const VAULT_VIEW = { vault: 'vault', detail: 'detail' };
@@ -2128,7 +2004,6 @@
         function unlockVaultSuccess() {
             applyTheme(State.vault.settings.theme);
             renderSidebar();
-            updateDashboard();
             renderEntries();
             showView('view-main');
             initVaultHistory();
@@ -2233,38 +2108,6 @@
             list.appendChild(buildItem('Trash', ICONS.Trash, 'Trash Bin', counts['Trash']));
         }
 
-        function updateDashboard() {
-            if (!State.vault) return;
-            const active = State.vault.entries.filter(e => !e.isDeleted);
-            document.getElementById('dash-total').textContent = active.length;
-            document.getElementById('dash-favs').textContent = active.filter(e => e.isFavorite).length;
-
-            let weak = 0, penalty = 0, reused = {};
-            active.forEach(e => {
-                if (e.password) {
-                    if (calcStrength(e.password) < 4) { weak++; penalty += 5; }
-                    if (!reused[e.password]) reused[e.password] = [];
-                    reused[e.password].push(e);
-                }
-                if (e.category === 'Login' && !e.url) penalty += 1;
-            });
-            Object.values(reused).forEach(g => { if (g.length > 1) penalty += (g.length * 3); });
-
-            let score = Math.max(0, 100 - (active.length ? Math.floor(penalty / active.length * 10) : 0));
-            if (active.length === 0) score = 100;
-
-            document.getElementById('dash-weak').textContent = weak;
-            document.getElementById('dash-score').textContent = score;
-
-            const scoreCard = document.getElementById('dash-card-score');
-            const weakCard = document.getElementById('dash-card-weak');
-            scoreCard.className = `dash-card ${score < 50 ? 'danger' : score < 80 ? 'warning' : 'success'}`;
-            weakCard.className = `dash-card ${weak > 0 ? 'danger' : 'success'}`;
-
-            // Hide dashboard if in Trash view
-            document.getElementById('dashboard-header').style.display = State.currentCategory === 'Trash' ? 'none' : 'grid';
-        }
-
         // Highlight helper safely builds DOM
         function highlightText(text, query) {
             if (!query || !text) return escapeHTML(text || '');
@@ -2284,7 +2127,6 @@
             if (!State.vault) return;
             const container = document.getElementById('entry-list');
             container.innerHTML = '';
-            updateDashboard(); // keep synced
 
             let entries = State.vault.entries;
             if (State.currentCategory === 'Trash') {
