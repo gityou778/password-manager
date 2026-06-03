@@ -1827,23 +1827,38 @@
 
         // --- PWA Registration ---
         let deferredPrompt;
-        if ('serviceWorker' in navigator) {
-            window.addEventListener('load', () => {
-                navigator.serviceWorker.register('./sw.js')
-                    .then((reg) => {
-                        reg.addEventListener('updatefound', () => {
-                            const worker = reg.installing;
-                            if (!worker) return;
-                            worker.addEventListener('statechange', () => {
-                                if (worker.state === 'installed' && navigator.serviceWorker.controller) {
-                                    showToast('Update available. Refresh to apply.', 'warning');
-                                }
-                            });
-                        });
-                    })
-                    .catch(() => { /* offline or unsupported */ });
+      if ('serviceWorker' in navigator) {
+    window.addEventListener('load', async () => {
+
+        try {
+            const reg = await navigator.serviceWorker.register('./sw.js');
+
+            reg.update();
+
+            setInterval(() => {
+                reg.update();
+            }, 60000);
+
+            reg.addEventListener('updatefound', () => {
+                const worker = reg.installing;
+                if (!worker) return;
+
+                worker.addEventListener('statechange', () => {
+                    if (
+                        worker.state === 'installed' &&
+                        navigator.serviceWorker.controller
+                    ) {
+                        showToast('New version available. Refresh page.', 'success');
+                    }
+                });
             });
+
+        } catch (err) {
+            console.error('SW registration failed:', err);
         }
+
+    });
+}
         window.addEventListener('beforeinstallprompt', (e) => {
             e.preventDefault();
             deferredPrompt = e;
